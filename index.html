@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>琪琪维生素A和AD日程表</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      background-color: #fff;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .ff-cn {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-flow: column nowrap;
+      flex-flow: column nowrap
+    }
+
+    .flex-1 {
+      -webkit-box-flex: 1;
+      -ms-flex: 1 1 0%;
+      flex: 1 1 0%
+    }
+
+    #app {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      padding-bottom: 10px;
+    }
+
+    #header {
+      height: 40px;
+      display: flex;
+      width: 100%;
+    }
+
+    #header .header-item {
+      width: calc(100% / 7);
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      color: #000;
+      border-left: 1px solid #f7f7f7;
+      background-color: #ddd;
+    }
+
+    #header .header-item:nth-child(1) {
+      border-left: none;
+    }
+
+    .week {
+      position: absolute;
+      width: 100%;
+      height: 40px;
+      color: #f00;
+      text-align: center;
+      line-height: 40px;
+      font-size: 20px;
+      font-weight: bold;
+      left: 0;
+    }
+
+    #root {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      color: #000;
+    }
+
+    #root div {
+      position: absolute;
+      width: calc(100% / 7);
+      height: 60px;
+      border: 1px solid #f7f7f7;
+      box-sizing: border-box;
+      top: 0;
+      left: 0;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-flow: column nowrap;
+      flex-flow: column nowrap
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" class="ff-cn">
+    <div id="header">
+      <div class="header-item">周日</div>
+      <div class="header-item">周一</div>
+      <div class="header-item">周二</div>
+      <div class="header-item">周三</div>
+      <div class="header-item">周四</div>
+      <div class="header-item">周五</div>
+      <div class="header-item">周六</div>
+    </div>
+    <div class="flex-1">
+      <div id="root"></div>
+    </div>
+  </div>
+  <script>
+    const curYear = new Date().getFullYear();
+    const curMonth = new Date().getMonth() + 1;
+    const curDate = new Date().getDate();
+    function weeks (now_month) {
+      let week_array = [];
+      let today = new Date(Date.parse(now_month));
+      let year = today.getFullYear();
+      let month = today.getMonth();
+      let i = 0;
+      let start = new Date(year, month, 1); // 得到当月第一天
+      let end = new Date(year, month + 1, 0); // 得到当月最后一天
+
+      // 循环每周最后天叠设置为第一天，直到最后一天小于当月的最后一天
+      while (start <= end) {
+        const monday = new Date(start.getTime());
+        const sunday = new Date(start.getTime());
+
+        monday.setDate(monday.getDate() + 1 - monday.getDay());
+        sunday.setDate(sunday.getDate() + 7 - sunday.getDay());
+
+        week_array.push(
+          [monday, sunday]
+        )
+
+        start = sunday;
+      }
+      return week_array;
+    }
+    // 获取当前日期对应当前月份内所有日期的信息
+    Date.prototype.getNowMonthData = function (e) {
+      const { origin = [0, 0], offsetX = 0, offsetY = 0 } = e;
+      const year = this.getFullYear();
+      const month = this.getMonth() + 1;
+      const day = this.getDay();
+      const monthTotalDays = new Date(year, month, 0).getDate();
+      const data = Array.from({ length: monthTotalDays }, function (v, i) {
+        const newDate = new Date(year, month - 1, i + 1);
+        const day = newDate.getDay();
+        const date = newDate.getDate();
+        const monthWeek = Math.ceil((date + 6 - day) / 7);
+        const iscurdate = (curYear === year && curMonth === month && curDate === date) ? true : false
+        return {
+          index: i + 1,
+          date,
+          year,
+          month,
+          day,
+          monthWeek: monthWeek,
+          info: `${year}-${month}-${i + 1},周${day || "日"},第${monthWeek}周`,
+          coord: [
+            origin[0] + day * offsetX,
+            origin[1] + (monthWeek - 1) * offsetY,
+          ],
+          iscurdate,
+        };
+      });
+      return data
+    };
+    const offsetX = 100 / 7; // 每日的间距横偏移量
+    const offsetY = 60; // 每日的间距纵偏移量
+
+    const root = document.getElementById("root");
+    let dom = document.createDocumentFragment();
+    let isHe = true
+    function temp (val, origin = [0, 0]) {
+      const date = new Date(val);
+      const data = date.getNowMonthData({
+        origin,
+        offsetX,
+        offsetY,
+      });
+      // console.log(data);
+      const domWeek = document.createElement("p");
+      domWeek.className = 'week'
+      domWeek.setAttribute(
+        "style",
+        `left:0;top: ${origin[1] - 40}px`
+      );
+      domWeek.innerHTML = `${data[0].year}年${data[0].month}月`;
+      dom.appendChild(domWeek);
+      data.map(function (item) {
+        const domItem = document.createElement("div");
+        domItem.setAttribute(
+          "style",
+          `${item.iscurdate ? "background-color: #0000ff;color: #fff;" : ""}left:${item.coord[0]}%;top: ${item.coord[1]}px`
+        );
+        domItem.innerHTML = `${item.date}号<br /><span style="${item.iscurdate ? 'color: #fff;' : 'color: #f0f;'}">${isHe ? "A" : "AD"}</span>`;
+        dom.appendChild(domItem);
+        isHe = !isHe;
+      });
+      root.appendChild(dom);
+    }
+    const dateArr = [
+      { ym: '2022-06', ymd: '2022-06-01'},
+      { ym: '2022-07', ymd: '2022-07-01'},
+      { ym: '2022-08', ymd: '2022-08-01'},
+      { ym: '2022-09', ymd: '2022-09-01'},
+      { ym: '2022-10', ymd: '2022-10-01'},
+      { ym: '2022-11', ymd: '2022-11-01'},
+      { ym: '2022-12', ymd: '2022-12-01'},
+      { ym: '2023-01', ymd: '2023-01-01'},
+      { ym: '2023-02', ymd: '2023-02-01'},
+      { ym: '2023-03', ymd: '2023-03-01'},
+      { ym: '2023-04', ymd: '2023-04-01'},
+      { ym: '2023-05', ymd: '2023-05-01'},
+      { ym: '2023-06', ymd: '2023-06-01'},
+      { ym: '2023-07', ymd: '2023-07-01'},
+      { ym: '2023-08', ymd: '2023-08-01'},
+      { ym: '2023-09', ymd: '2023-09-01'},
+      { ym: '2023-10', ymd: '2023-10-01'},
+      { ym: '2023-11', ymd: '2023-11-01'},
+      { ym: '2023-12', ymd: '2023-12-01'}
+    ]
+    let oy = 0
+    dateArr.map((item, iix) => {
+      const weeksl = weeks(item.ym)
+      temp(item.ymd, [0, oy + 40])
+      oy = weeksl.length * 60 + 40 + oy
+    })
+  </script>
+</body>
+
+</html>
