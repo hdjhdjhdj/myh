@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-  <title>琪琪维生素A和AD日程表</title>
+  <title>琪琪维生素D和AD日程表</title>
   <style>
     * {
       margin: 0;
@@ -207,7 +207,7 @@
           "style",
           `${item.iscurdate ? "background-color: #0000ff;color: #fff;" : ""}left:${item.coord[0]}%;top: ${item.coord[1]}px`
         );
-        domItem.innerHTML = `${item.date}号<br /><span style="${item.iscurdate ? 'color: #fff;' : 'color: #f0f;'}">${isHe ? "A" : "AD"}</span>`;
+        domItem.innerHTML = `${item.date}号<br /><span style="${item.iscurdate ? 'color: #fff;' : 'color: #f0f;'}">${isHe ? "D" : "AD"}</span>`;
         dom.appendChild(domItem);
         isHe = !isHe;
       });
