@@ -207,17 +207,13 @@
           "style",
           `${item.iscurdate ? "background-color: #0000ff;color: #fff;" : ""}left:${item.coord[0]}%;top: ${item.coord[1]}px`
         );
-        domItem.innerHTML = `${item.date}号<br /><span style="${item.iscurdate ? 'color: #fff;' : 'color: #f0f;'}">${isHe ? "D" : "AD"}</span>`;
+        domItem.innerHTML = `${item.date}号<br /><span style="${item.iscurdate ? 'color: #fff;' : 'color: #f0f;'}">${isHe ? "D" : "DHA"}</span>`;
         dom.appendChild(domItem);
         isHe = !isHe;
       });
       root.appendChild(dom);
     }
     const dateArr = [
-      { ym: '2022-06', ymd: '2022-06-01'},
-      { ym: '2022-07', ymd: '2022-07-01'},
-      { ym: '2022-08', ymd: '2022-08-01'},
-      { ym: '2022-09', ymd: '2022-09-01'},
       { ym: '2022-10', ymd: '2022-10-01'},
       { ym: '2022-11', ymd: '2022-11-01'},
       { ym: '2022-12', ymd: '2022-12-01'},
