@@ -213,23 +213,18 @@
       });
       root.appendChild(dom);
     }
-    const dateArr = [
-      { ym: '2022-10', ymd: '2022-10-01'},
-      { ym: '2022-11', ymd: '2022-11-01'},
-      { ym: '2022-12', ymd: '2022-12-01'},
-      { ym: '2023-01', ymd: '2023-01-01'},
-      { ym: '2023-02', ymd: '2023-02-01'},
-      { ym: '2023-03', ymd: '2023-03-01'},
-      { ym: '2023-04', ymd: '2023-04-01'},
-      { ym: '2023-05', ymd: '2023-05-01'},
-      { ym: '2023-06', ymd: '2023-06-01'},
-      { ym: '2023-07', ymd: '2023-07-01'},
-      { ym: '2023-08', ymd: '2023-08-01'},
-      { ym: '2023-09', ymd: '2023-09-01'},
-      { ym: '2023-10', ymd: '2023-10-01'},
-      { ym: '2023-11', ymd: '2023-11-01'},
-      { ym: '2023-12', ymd: '2023-12-01'}
-    ]
+    const nowdd = new Date().getFullYear()
+    const nowMonth = new Date().getMonth() + 1
+    const dateArr = []
+    for (let idx = 1; idx < 13; idx++) {
+      if (idx >= nowMonth) {
+        const m = idx < 10 ? `0${idx}` : idx
+        dateArr.push({
+          ym: `${nowdd}-${m}`,
+          ymd: `${nowdd}-${m}-01`,
+        })
+      }
+    }
     let oy = 0
     dateArr.map((item, iix) => {
       const weeksl = weeks(item.ym)
