@@ -43,7 +43,8 @@
     * [.setTdtTerrain()](#MapCore+setTdtTerrain) ⇒ <code>Promise.&lt;void&gt;</code>
     * [.changeMap()](#MapCore+changeMap) ⇒ <code>void</code>
     * [.initPreviewEvent()](#MapCore+initPreviewEvent)
-    * [.load3dtilesetModel(url, [options])](#MapCore+load3dtilesetModel) ⇒ <code>Promise.&lt;void&gt;</code>
+    * [.load3dtilesetModel(url, [options], options2)](#MapCore+load3dtilesetModel) ⇒ <code>Promise.&lt;void&gt;</code>
+    * [.zoomToTileset3d()](#MapCore+zoomToTileset3d)
     * [.flyTo(options)](#MapCore+flyTo)
     * [.setView(options)](#MapCore+setView)
     * [.zoomIn([rate])](#MapCore+zoomIn)
@@ -60,6 +61,10 @@
     * [.showEntityById(id, show)](#MapCore+showEntityById)
     * [.zoomToEntityById(id)](#MapCore+zoomToEntityById)
     * [.flyToEntityById(id)](#MapCore+flyToEntityById)
+    * [.getPrimitiveById(id)](#MapCore+getPrimitiveById) ⇒ <code>Cesium.Primitive</code> \| <code>null</code>
+    * [.removePrimitive()](#MapCore+removePrimitive)
+    * [.removePrimitiveById()](#MapCore+removePrimitiveById)
+    * [.showPrimitiveById(id, show)](#MapCore+showPrimitiveById)
     * [.addPointSurveillance([opts])](#MapCore+addPointSurveillance) ⇒ <code>Cesium.Entity</code> \| <code>null</code>
     * [.removePointSurveillance(id)](#MapCore+removePointSurveillance)
     * [.removePointSurveillanceAll()](#MapCore+removePointSurveillanceAll)
@@ -70,6 +75,11 @@
     * [.removePolygonHouseAll()](#MapCore+removePolygonHouseAll)
     * [.showPolygonHouse(id, [show])](#MapCore+showPolygonHouse)
     * [.showPolygonHouseAll([show])](#MapCore+showPolygonHouseAll)
+    * [.addCommonMarker([opts])](#MapCore+addCommonMarker) ⇒ <code>Object</code>
+    * [.removeCommonMarker(id)](#MapCore+removeCommonMarker)
+    * [.removeCommonMarkerAll()](#MapCore+removeCommonMarkerAll)
+    * [.showCommonMarker(id, [show])](#MapCore+showCommonMarker)
+    * [.showCommonMarkerAll([show])](#MapCore+showCommonMarkerAll)
 
 <a name="new_MapCore_new"></a>
 
@@ -261,7 +271,7 @@ getLevelHeight(30);
 **Kind**: instance method of [<code>MapCore</code>](#MapCore)  
 <a name="MapCore+load3dtilesetModel"></a>
 
-### mapCore.load3dtilesetModel(url, [options]) ⇒ <code>Promise.&lt;void&gt;</code>
+### mapCore.load3dtilesetModel(url, [options], options2) ⇒ <code>Promise.&lt;void&gt;</code>
 加载3D Tiles模型并添加到地图场景中
 
 该方法用于异步加载3D Tiles格式的模型数据，支持通过配置项自定义加载参数，
@@ -278,7 +288,15 @@ getLevelHeight(30);
 | --- | --- | --- | --- |
 | url | <code>string</code> |  | 3D Tiles模型的URL地址，必填参数 |
 | [options] | <code>Cesium.Cesium3DTileset.ConstructorOptions</code> | <code>{}</code> | 3D Tiles加载配置项，   参考Cesium官方文档：https://cesium.com/learn/cesiumjs/ref-doc/Cesium3DTileset.html#.ConstructorOptions |
+| options2 | <code>Object</code> |  | 自定义配置项 |
+| [options2.isFly] | <code>boolean</code> | <code>true</code> | 是否定位到模型位置，默认true |
 
+<a name="MapCore+zoomToTileset3d"></a>
+
+### mapCore.zoomToTileset3d()
+定位到模型位置
+
+**Kind**: instance method of [<code>MapCore</code>](#MapCore)  
 <a name="MapCore+flyTo"></a>
 
 ### mapCore.flyTo(options)
@@ -595,6 +613,42 @@ console.log(material); // 输出 Cesium.PolylineDashMaterialProperty 对象
 | --- | --- | --- |
 | id | <code>String</code> | entity的id |
 
+<a name="MapCore+getPrimitiveById"></a>
+
+### mapCore.getPrimitiveById(id) ⇒ <code>Cesium.Primitive</code> \| <code>null</code>
+根据id查找primitive
+
+**Kind**: instance method of [<code>MapCore</code>](#MapCore)  
+**Returns**: <code>Cesium.Primitive</code> \| <code>null</code> - 返回Cesium.Primitive对象或null  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | primitive的id |
+
+<a name="MapCore+removePrimitive"></a>
+
+### mapCore.removePrimitive()
+移除primitive
+
+**Kind**: instance method of [<code>MapCore</code>](#MapCore)  
+<a name="MapCore+removePrimitiveById"></a>
+
+### mapCore.removePrimitiveById()
+根据id移除primitive
+
+**Kind**: instance method of [<code>MapCore</code>](#MapCore)  
+<a name="MapCore+showPrimitiveById"></a>
+
+### mapCore.showPrimitiveById(id, show)
+根据id显示隐藏某个primitive
+
+**Kind**: instance method of [<code>MapCore</code>](#MapCore)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| id | <code>string</code> |  | primitive的id |
+| show | <code>boolean</code> | <code>false</code> | true=显示 false=隐藏 |
+
 <a name="MapCore+addPointSurveillance"></a>
 
 ### mapCore.addPointSurveillance([opts]) ⇒ <code>Cesium.Entity</code> \| <code>null</code>
@@ -889,6 +943,67 @@ showPolygonHouseAll(true);
 // 隐藏地图上所有的房屋面状标记（使用默认值）
 showPolygonHouseAll();
 ```
+<a name="MapCore+addCommonMarker"></a>
+
+### mapCore.addCommonMarker([opts]) ⇒ <code>Object</code>
+添加通用标记到地图上
+
+**Kind**: instance method of [<code>MapCore</code>](#MapCore)  
+**Returns**: <code>Object</code> - 返回 {point:Cesium.Entity|null, polygon:Cesium.Primitive|null}  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [opts] | <code>Object</code> | <code>{}</code> | 标记的配置选项 |
+| opts.id | <code>Number</code> |  | 标记id |
+| opts.show | <code>Boolean</code> |  | 是否显示标记，默认值true |
+| opts.name | <code>String</code> |  | 标记名称，默认值空字符串 |
+| opts.geoData | <code>String</code> |  | 标记geo数据，应为JSON字符串格式 |
+| opts.longitude | <code>Number</code> |  | 标记经度 |
+| opts.latitude | <code>Number</code> |  | 标记纬度 |
+| opts.iconUrl | <code>String</code> |  | 标记的图标地址 |
+| opts.imageWidth | <code>Number</code> |  | 标记的图标宽 |
+| opts.imageHeight | <code>Number</code> |  | 标记的图标高 |
+
+<a name="MapCore+removeCommonMarker"></a>
+
+### mapCore.removeCommonMarker(id)
+移除地图上的单个通用标记
+
+**Kind**: instance method of [<code>MapCore</code>](#MapCore)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>Number</code> | 标记id，与添加时使用的id一致 |
+
+<a name="MapCore+removeCommonMarkerAll"></a>
+
+### mapCore.removeCommonMarkerAll()
+移除地图上所有的通用标记
+
+**Kind**: instance method of [<code>MapCore</code>](#MapCore)  
+<a name="MapCore+showCommonMarker"></a>
+
+### mapCore.showCommonMarker(id, [show])
+显示或隐藏地图上的单个通用标记
+
+**Kind**: instance method of [<code>MapCore</code>](#MapCore)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| id | <code>Number</code> |  | 标记id，与添加时使用的id一致 |
+| [show] | <code>Boolean</code> | <code>false</code> | 是否显示标记，true表示显示，false表示隐藏，默认值为false |
+
+<a name="MapCore+showCommonMarkerAll"></a>
+
+### mapCore.showCommonMarkerAll([show])
+显示或隐藏地图上所有的通用标记
+
+**Kind**: instance method of [<code>MapCore</code>](#MapCore)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [show] | <code>Boolean</code> | <code>false</code> | 是否显示标记，true表示显示所有，false表示隐藏所有，默认值为false |
+
 <a name="VgoGis3dSDK"></a>
 
 ## VgoGis3dSDK : <code>object</code>
@@ -922,6 +1037,8 @@ SDK 命名空间
 | --- | --- | --- |
 | SURVEILLANCE | <code>string</code> | <code>&quot;surveillance&quot;</code> | 
 | HOUSE | <code>string</code> | <code>&quot;house&quot;</code> | 
+| COMMON_POINT | <code>string</code> | <code>&quot;commonPoint&quot;</code> | 
+| COMMON_POLYGON | <code>string</code> | <code>&quot;commonPolygon&quot;</code> | 
 
 <a name="MapMarkLineTypes"></a>
 
